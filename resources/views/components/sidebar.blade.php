@@ -37,7 +37,7 @@
             <div class="hidden mt-2 ml-8 space-y-1" id="products-submenu">
                 <a href="#" class="block px-4 py-2 text-sm text-gray-600 rounded-md hover:bg-green-100">All Products</a>
                 <a href="#" class="block px-4 py-2 text-sm text-gray-600 rounded-md hover:bg-green-100">Add Product</a>
-                <a href="#" class="block px-4 py-2 text-sm text-gray-600 rounded-md hover:bg-green-100">Categories</a>
+                <a href="{{ route('admin.categories')}} " class=" block px-4 py-2 text-sm text-gray-600 rounded-md hover:bg-green-100">Categories</a>
             </div>
         </div>
 

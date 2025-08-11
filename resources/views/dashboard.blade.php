@@ -52,13 +52,13 @@
             </button>
         </div>
     @endif
-
-    <div class="min-h-screen bg-gray-50">
+ 
+    {{-- <div class="min-h-screen bg-gray-50"> --}}
         <!-- Include Sidebar Component -->
-        <x-sidebar />
+        {{-- <x-sidebar /> --}}
 
         {{-- Dashboard Content [START]--}}
-        <div class="p-6 sm:ml-64">
+        {{-- <div class="p-6 sm:ml-64"> --}}
             <!-- Header -->
             <div class="flex items-center justify-between mb-8">
                 <div>
@@ -336,16 +336,10 @@
                     </table>
                 </div>
             </div>
-        </div>
+        {{-- </div> --}}
         {{-- Dashboard Content [END]--}}
-    </div>
+    {{-- </div> --}}
 
-    <!-- Mobile menu button -->
-    <button class="fixed top-4 left-4 z-50 sm:hidden p-2 text-gray-600 hover:text-gray-900 hover:bg-gray-100 rounded-lg transition-colors duration-200" onclick="toggleMobileSidebar()">
-        <svg class="w-6 h-6" fill="currentColor" viewBox="0 0 20 20">
-            <path fill-rule="evenodd" d="M3 5a1 1 0 011-1h12a1 1 0 110 2H4a1 1 0 01-1-1zM3 10a1 1 0 011-1h12a1 1 0 110 2H4a1 1 0 01-1-1zM3 15a1 1 0 011-1h12a1 1 0 110 2H4a1 1 0 01-1-1z" clip-rule="evenodd"/>
-        </svg>
-    </button>
 
     <script>
         function showToast() {
