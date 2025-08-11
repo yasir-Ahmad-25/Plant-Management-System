@@ -17,7 +17,6 @@ class CategoriesController extends Controller
         return view('categories.index',$data);
     }
 
-
     public function storeCategory(Request $request){
         // validate the request
         $request->validate([
@@ -46,7 +45,6 @@ class CategoriesController extends Controller
             ]);
         }
     }
-
 
     public function get_category($id){
         $category = Category::where('product_category_id',$id)->first();

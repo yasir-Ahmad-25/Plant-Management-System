@@ -16,6 +16,7 @@
         </button>
     </div>
 
+
     <!-- Enhanced category cards with modern design, gradients, and better layout -->
     <div class="container mx-auto p-4 grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
         @foreach($categories as $category)
@@ -264,8 +265,15 @@
             $('#toast').addClass('hidden');
         }
 
+        // =============== Toast Notification System [END] ==================
+
         // =============== Event Listeners [START] ==================
         $(document).ready(function() {
+
+                @if(session('no_categories'))
+                    showToast('{{ session('no_categories') }}', 'error');
+                @endif
+
             $.ajaxSetup({
                 headers: {
                     'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
@@ -306,7 +314,7 @@
             });
 
             // Close modals when clicking outside
-            $('#categoryModal, #viewModal').on('click', function(e) {
+            $('#categoryModal').on('click', function(e) {
                 if (e.target === this) {
                     if (this.id === 'categoryModal') closeModal();
                     if (this.id === 'viewModal') closeViewModal();
@@ -320,6 +328,7 @@
                     closeViewModal();
                 }
             });
+        
         });
     </script>
 </x-base>

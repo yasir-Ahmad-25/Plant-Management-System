@@ -3,6 +3,7 @@
 use App\Http\Controllers\AuthenticationController;
 use App\Http\Controllers\CategoriesController;
 use App\Http\Controllers\DashboardController;
+use App\Http\Controllers\ProductsController;
 use Illuminate\Support\Facades\Route;
 
 // Dashboard Routes
@@ -17,6 +18,14 @@ Route::middleware('custom.auth')->controller(DashboardController::class)->group(
     Route::post('updateCategories/{id}', [CategoriesController::class, 'updateCategory'])->name('admin.categories.update');
     Route::post('deleteCategories/{id}', [CategoriesController::class, 'deleteCategory'])->name('admin.categories.delete');
     // ==================== Categories Section [END] =================
+    
+    // ==================== Products Section [START] =================
+    Route::get('products', [ProductsController::class, 'index'])->name('admin.products');
+    Route::get('get_product/{id}', [ProductsController::class, 'get_product'])->name('admin.get_product');
+    Route::post('store_product', [ProductsController::class, 'store_product'])->name('admin.products.store');
+    Route::post('update_product/{id}', [ProductsController::class, 'update_product'])->name('admin.products.update');
+    Route::post('delete_product/{id}', [ProductsController::class, 'delete_product'])->name('admin.products.delete');
+    // ==================== Products Section [END] =================
 });
 
 
