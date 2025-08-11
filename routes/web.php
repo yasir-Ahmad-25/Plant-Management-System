@@ -12,9 +12,10 @@ Route::middleware('custom.auth')->controller(DashboardController::class)->group(
 
     // ==================== Categories Section [START] =================
     Route::get('categories', [CategoriesController::class, 'categories'])->name('admin.categories');
+    Route::get('get_category/{id}', [CategoriesController::class, 'get_category'])->name('admin.get_category');
     Route::post('storeCategories', [CategoriesController::class, 'storeCategory'])->name('admin.categories.store');
-    Route::post('updateCategories', [CategoriesController::class, 'updateCategory'])->name('admin.categories.update');
-    Route::post('deleteCategories', [CategoriesController::class, 'deleteCategory'])->name('admin.categories.delete');
+    Route::post('updateCategories/{id}', [CategoriesController::class, 'updateCategory'])->name('admin.categories.update');
+    Route::post('deleteCategories/{id}', [CategoriesController::class, 'deleteCategory'])->name('admin.categories.delete');
     // ==================== Categories Section [END] =================
 });
 

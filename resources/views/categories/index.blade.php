@@ -53,16 +53,12 @@
                     </div>
 
                     <!-- Action Buttons -->
-                    <div class="flex items-center justify-between pt-4 border-t border-gray-100">
-                        <button onclick="viewCategory({{ $category->id }})" 
-                                class="flex items-center px-3 py-2 text-xs font-medium text-blue-600 hover:text-blue-800 hover:bg-blue-50 rounded-lg transition-all duration-200">
-                            <i class="fa-solid fa-eye mr-1"></i> View
-                        </button>
-                        <button onclick="editCategory({{ $category->id }})" 
+                    <div class="flex items-center justify-end pt-4 border-t border-gray-100">
+                        <button onclick="editCategory({{ $category->product_category_id }})" 
                                 class="flex items-center px-3 py-2 text-xs font-medium text-amber-600 hover:text-amber-800 hover:bg-amber-50 rounded-lg transition-all duration-200">
                             <i class="fa-solid fa-pen mr-1"></i> Edit
                         </button>
-                        <button onclick="deleteCategory({{ $category->id }})" 
+                        <button onclick="deleteCategory({{ $category->product_category_id }})" 
                                 class="flex items-center px-3 py-2 text-xs font-medium text-red-600 hover:text-red-800 hover:bg-red-50 rounded-lg transition-all duration-200">
                             <i class="fa-solid fa-trash mr-1"></i> Delete
                         </button>
@@ -86,7 +82,6 @@
             
             <form action="#" method="POST" class="p-6" id="categoryForm">
                 <input type="hidden" id="categoryId" name="category_id">
-                <input type="hidden" id="formMethod" name="_method" value="POST">
                 
                 <div class="space-y-6">
                     <div>
@@ -122,37 +117,6 @@
                     </button>
                 </div>
             </form>
-        </div>
-    </div>
-
-    <!-- View Category Modal -->
-    <div id="viewModal" class="hidden fixed inset-0 bg-black bg-opacity-50 z-50">
-        <div class="fixed left-1/2 top-1/2 transform -translate-x-1/2 -translate-y-1/2 bg-white rounded-xl shadow-2xl w-full max-w-lg mx-4">
-            <div class="flex items-center justify-between p-6 border-b border-gray-100">
-                <h3 class="text-xl font-bold text-gray-900">Category Details</h3>
-                <button type="button" onclick="closeViewModal()" class="text-gray-400 hover:text-gray-600 transition-colors">
-                    <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path>
-                    </svg>
-                </button>
-            </div>
-            
-            <div class="p-6 space-y-4">
-                <div>
-                    <label class="block text-sm font-semibold text-gray-700 mb-2">Category Name</label>
-                    <p id="viewCategoryName" class="text-gray-900 bg-gray-50 p-3 rounded-lg"></p>
-                </div>
-                
-                <div>
-                    <label class="block text-sm font-semibold text-gray-700 mb-2">Description</label>
-                    <p id="viewCategoryDescription" class="text-gray-900 bg-gray-50 p-3 rounded-lg min-h-[100px]"></p>
-                </div>
-                
-                <div>
-                    <label class="block text-sm font-semibold text-gray-700 mb-2">Products Count</label>
-                    <p id="viewProductsCount" class="text-gray-900 bg-gray-50 p-3 rounded-lg"></p>
-                </div>
-            </div>
         </div>
     </div>
 
@@ -195,15 +159,13 @@
                 submitBtn.text('Add Category');
                 form[0].reset();
                 $('#categoryId').val('');
-                $('#formMethod').val('POST');
             } else if (mode === 'edit' && categoryData) {
                 modalTitle.text('Edit Category');
                 submitBtn.text('Update Category');
-                $('#categoryId').val(categoryData.id);
+                $('#categoryId').val(categoryData.product_category_id);
                 $('#category_name').val(categoryData.category_name);
                 $('#category_description').val(categoryData.category_description);
-                $('#formMethod').val('PUT');
-                currentCategoryId = categoryData.id;
+                currentCategoryId = categoryData.product_category_id;
             }
             
             modal.removeClass('hidden');
@@ -218,31 +180,28 @@
             currentCategoryId = null;
         }
 
-        function closeViewModal() {
-            $('#viewModal').addClass('hidden');
-            $('body').css('overflow', 'auto');
-        }
-
         // =============== Category Actions [START] ==================
-        function viewCategory(categoryId) {
-            // For now, we'll use placeholder data
-            $('#viewCategoryName').text('Sample Category Name');
-            $('#viewCategoryDescription').text('Sample category description goes here...');
-            $('#viewProductsCount').text('5 Products');
-            
-            $('#viewModal').removeClass('hidden');
-            $('body').css('overflow', 'hidden');
-        }
-
         function editCategory(categoryId) {
-            // In a real application, fetch category data via AJAX
-            const categoryData = {
-                id: categoryId,
-                category_name: 'Sample Category',
-                category_description: 'Sample description'
-            };
-            
-            openModal('edit', categoryData);
+
+            // First Fetch the category data based on the categoryId
+            $.ajax({
+                url: '{{ route("admin.get_category", ":id") }}'.replace(':id', categoryId),
+                type: 'GET',
+                data: {
+                    category_id: categoryId
+                },
+                success: function(response) {
+                    if(response.status) {
+                        const categoryData = response.data;
+                        openModal('edit', categoryData);
+                    } else {
+                        showToast('Failed To Fetch Category Data: ','error');
+                    }
+                },
+                error: function(xhr) {
+                    showToast('Error Fetching category', 'error');
+                }
+            });
         }
 
         function deleteCategory(categoryId) {
@@ -259,19 +218,21 @@
                 if (result.isConfirmed) {
                     // Perform delete action via AJAX
                     $.ajax({
-                        url: `/admin/categories/${categoryId}`,
-                        type: 'DELETE',
+                        url: `{{ route('admin.categories.delete',':id')}}`.replace(':id', categoryId),
+                        type: 'POST',
                         success: function(response) {
                             if(response.status) {
                                 showToast('Category deleted successfully!', 'success');
-                                // Remove the category card from DOM or reload page
-                                location.reload();
+                                setTimeout(() => {
+                                    // Remove the category card from DOM or reload page
+                                    location.reload();
+                                }, 2000);
                             } else {
-                                showToast('Failed to delete category', 'error');
+                                showToast('Failed To Delete Category', 'error');
                             }
                         },
                         error: function() {
-                            showToast('Error deleting category', 'error');
+                            showToast('Error Deleting Category', 'error');
                         }
                     });
                 }
@@ -314,26 +275,32 @@
             $('#categoryForm').on('submit', function(e) {
                 e.preventDefault();
                 
+                console.log("the current category id is: ", currentCategoryId);
+                
                 const formData = $(this).serialize();
-                const url = currentMode === 'add' ? '{{ route("admin.categories.store") }}' : `/admin/categories/${currentCategoryId}`;
+                const url = currentMode === 'add' ? '{{ route("admin.categories.store") }}' : `{{ route('admin.categories.update',':id') }}`.replace(':id', currentCategoryId);
                 const method = currentMode === 'add' ? 'POST' : 'PUT';
                 
                 $.ajax({
                     url: url,
-                    type: method,
+                    type: 'POST',
                     data: formData,
                     success: function(response) {
                         if(response.status) {
                             const message = currentMode === 'add' ? 'Category added successfully!' : 'Category updated successfully!';
                             showToast(message, 'success');
                             closeModal();
-                            location.reload(); // Reload to show updated data
+                            setTimeout(() => {
+                                location.reload(); // Reload to show updated data
+                            }, 2000);
                         } else {
-                            showToast('Failed to save category: ' + response.message, 'error');
+                            const message = currentMode === 'add' ? 'Failed to save category: ' + response.message : 'Failed To update Category!';
+                            showToast(message, 'error');
                         }
                     },
                     error: function(xhr) {
-                        showToast('Error saving category', 'error');
+                        const message = currentMode === 'add' ? 'Error saving category' : 'Error updating Category Please Try Again!';
+                        showToast(message, 'error');
                     }
                 });
             });
