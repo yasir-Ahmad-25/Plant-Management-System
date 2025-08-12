@@ -4,6 +4,7 @@ use App\Http\Controllers\AuthenticationController;
 use App\Http\Controllers\CategoriesController;
 use App\Http\Controllers\DashboardController;
 use App\Http\Controllers\ProductsController;
+use App\Http\Controllers\SalesController;
 use Illuminate\Support\Facades\Route;
 
 // Dashboard Routes
@@ -26,6 +27,20 @@ Route::middleware('custom.auth')->controller(DashboardController::class)->group(
     Route::post('update_product/{id}', [ProductsController::class, 'update_product'])->name('admin.products.update');
     Route::post('delete_product/{id}', [ProductsController::class, 'delete_product'])->name('admin.products.delete');
     // ==================== Products Section [END] =================
+
+
+    // ===================== Sales Section [START] =================
+    Route::get('sales', [SalesController::class, 'index'])->name('admin.sales');
+    Route::get('get_sale/{id}', [SalesController::class, 'get_sale'])->name('admin.get_sale');
+    Route::get('create_sale_view', [SalesController::class, 'create_sale_view'])->name('admin.sales.create_sale_view');
+    Route::post('store_sale', [SalesController::class, 'store_sale'])->name('admin.sales.store');
+    Route::post('update_sale/{id}', [SalesController::class, 'update_sale'])->name('admin.sales.update');
+    Route::post('delete_sale/{id}', [SalesController::class, 'delete_sale'])->name('admin.sales.delete');
+    Route::post('search_sale', [SalesController::class, 'search_sale'])->name('admin.sales.search');
+    Route::get('sales_report', [SalesController::class, 'sales_report'])->name('admin.sales.report');
+    Route::get('sales_report_pdf', [SalesController::class, 'sales_report_pdf'])->name('admin.sales.report.pdf');
+    Route::get('sales_report_excel', [SalesController::class, 'sales_report_excel'])->name('admin.sales.report.excel');
+    // ===================== Sales Section [END] =================
 });
 
 
