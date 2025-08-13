@@ -11,6 +11,7 @@ class ProductSales extends Model
     protected $primaryKey = 'sale_id';
 
     protected $fillable = [
+        'invoice_number',
         'customer_name',
         'customer_number',
         'customer_address',
@@ -19,5 +20,15 @@ class ProductSales extends Model
         'delivery',
         'paid',
         'balance',
+        'grand_total'
+    ];
+
+    protected $casts = [
+        'discount' => 'float',
+        'delivery' => 'float',
+        'paid' => 'float',
+        'balance' => 'float',
+        'grand_total' => 'float',
     ];
 }
+

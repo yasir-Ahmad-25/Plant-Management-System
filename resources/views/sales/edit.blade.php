@@ -16,9 +16,9 @@
                             {{ $page_title }}
                         </h1>
                         <p class="text-green-600">Edit the sale transaction for plant products</p>
-                    </div>
+                    </div> 
                     <div class="flex space-x-3">
-                        <button onclick="window.history.back()" class="px-4 py-2 bg-amber-600 text-white rounded-md hover:bg-amber-700 transition-colors duration-200">
+                        <button onclick="window.history.back()" class="px-4 py-2 bg-yellow-300 text-white rounded-md hover:bg-yellow-500 transition-colors duration-200">
                             <i class="fas fa-arrow-left mr-2"></i>Back
                         </button>
                     </div>
@@ -27,6 +27,10 @@
 
             <!-- Sales Form -->
             <form id="salesForm" class="space-y-6">
+
+                @csrf
+                <input type="hidden" name="sale_id" id="sale_id" value="{{ $saleData->sale_id }}">
+
                 <!-- Customer Information Section -->
                 <div class="bg-white rounded-md shadow-sm border border-green-200 p-6">
                     <h2 class="text-xl font-semibold text-green-800 mb-4 flex items-center">
@@ -165,6 +169,7 @@
 
                     <div class="mt-6 pt-4 border-t border-green-200">
                         <div class="text-right">
+                            <input type="hidden" name="grand_total" id="grand_total" value="{{ $saleData->grand_total ?? 0 }}">
                             <span class="text-2xl font-bold text-green-800">
                                 Grand Total: $<span id="grandTotal">{{ $saleData->grand_total ?? '0.00' }}</span>
                             </span>
@@ -175,12 +180,12 @@
                 <!-- Action Buttons -->
                 <div class="flex justify-end space-x-4">
                     <button type="button" onclick="cancelForm()" 
-                            class="px-6 py-3 bg-amber-600 text-white rounded-md hover:bg-amber-700 transition-colors duration-200 flex items-center">
+                            class="px-6 py-3 bg-red-600 text-white rounded-md hover:bg-red-700 transition-colors duration-200 flex items-center">
                         <i class="fas fa-times mr-2"></i>Cancel
                     </button>
                     <button type="submit" 
-                            class="px-6 py-3 bg-green-600 text-white rounded-md hover:bg-green-700 transition-colors duration-200 flex items-center">
-                        <i class="fas fa-save mr-2"></i>Save Sale
+                            class="px-6 py-3 bg-yellow-300 text-black rounded-md hover:bg-yellow-500 transition-colors duration-200 flex items-center">
+                        <i class="fas fa-save mr-2"></i>Update Sale
                     </button>
                 </div>
             </form>
@@ -283,6 +288,7 @@
                 calculateSubtotal();
                 calculateGrandTotal();
                 calculateBalance();
+                document.getElementById('paid').value = 0;
             } else {
                 Swal.fire({
                     icon: 'warning',
@@ -326,6 +332,7 @@
             
             const grandTotal = subtotal - discount + delivery;
             document.getElementById('grandTotal').textContent = grandTotal.toFixed(2);
+            document.getElementById('grand_total').value = grandTotal.toFixed(2);
             calculateBalance();
             return grandTotal;
         }
@@ -406,28 +413,32 @@
             calculateSubtotal();
             calculateGrandTotal();
             calculateBalance();
+
+          // Trigger the inputs
+           $('.quantity-input').trigger('input');
+           $('.price-input').trigger('input');
+           $('.total-input').trigger('input');
+            
         });
 
         function sendAjaxRequest() {
             // This function would normally send the form data to your Laravel backend via AJAX
             const formData = new FormData($('#salesForm')[0]);
-            
+            const sale_id = $('#sale_id').val();
+            console.log("Sending form data to the server...");
 
             $.ajax({
-                url: '{{ route("admin.sales.store") }}',
+                url: `{{ route("admin.sales.update",':id') }}`.replace(':id', sale_id),
                 type: 'POST',
-                data: {
-                    formData: formData,
-                    _token: '{{ csrf_token() }}'
-                },
+                data: formData,
                 processData: false,
                 contentType: false,
                 success: function(response) {
                     if(response.status){
                         Swal.fire({
                             icon: 'success',
-                            title: 'Sale Saved!',
-                            text: 'The plant sale has been successfully recorded.',
+                            title: 'Sale Updated!',
+                            text: response.message || 'The plant sale has been successfully Updated.',
                             confirmButtonColor: '#16a34a'
                         }).then(() => {
                             window.location.href = "{{ route('admin.sales') }}";
@@ -436,19 +447,19 @@
                         // Show success message
                         Swal.fire({
                             icon: 'error',
-                            title: 'Failed To Save Sale!',
-                            text: 'Failed to save Sale Record Please Try Again..',
+                            title: 'Failed To Update Sale!',
+                            text: response.message || 'Failed to update Sale Record Please Try Again..',
                             confirmButtonColor: '#1c77c2ff'
                         });
                     }
                 },
                 error: function(xhr, status, error) {
                     // Handle error response
-                    console.error('Error saving sale:', error);
+                    console.error('Error updating sale:', error);
                     Swal.fire({
                         icon: 'error',
-                        title: 'Error Saving Sale',
-                        text: 'There was an error saving the sale. Please try again.',
+                        title: 'Error Updating Sale',
+                        text: 'There was an error updating the sale. Please try again.',
                         confirmButtonColor: '#dc2626'
                     });
                 }

@@ -16,5 +16,12 @@ class ProductSalesDetails extends Model
         'quantity',
         'price',
     ];
+
+    protected $casts = [
+        'price' => 'float',
+        'total' => 'float',
+    ];
+
+
 }
  

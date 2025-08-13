@@ -163,6 +163,7 @@
                     
                     <div class="mt-6 pt-4 border-t border-green-200">
                         <div class="text-right">
+                            <input type="hidden" name="grand_total" id="grand_total" value="{{ $saleData->grand_total ?? 0 }}">
                             <span class="text-2xl font-bold text-green-800">
                                 Grand Total: $<span id="grandTotal">0.00</span>
                             </span>
@@ -279,6 +280,8 @@
                 calculateSubtotal();
                 calculateGrandTotal();
                 calculateBalance();
+                // make the paid 0
+                document.getElementById('paid').value = 0;
             } else {
                 Swal.fire({
                     icon: 'warning',
@@ -320,6 +323,8 @@
             
             const grandTotal = subtotal - discount + delivery;
             document.getElementById('grandTotal').textContent = grandTotal.toFixed(2);
+            document.getElementById('grand_total').value = grandTotal.toFixed(2);
+
             calculateBalance();
             return grandTotal;
         }
