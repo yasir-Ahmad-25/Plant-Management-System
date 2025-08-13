@@ -18,7 +18,7 @@ class ProductsController extends Controller
 
         $products = Product::join('product_categories', 'products.product_category_id', '=', 'product_categories.product_category_id')
             ->select('products.*', 'product_categories.category_name')
-            ->get();
+            ->get(); 
 
         $data = [
             'page_title' => 'Products',
@@ -67,14 +67,14 @@ class ProductsController extends Controller
             'product_name' => 'required|string|max:255',
             'product_price' => 'required|numeric',
             'category_id' => 'required|exists:product_categories,product_category_id',
-            'description' => 'nullable|string',
+            'product_description' => 'nullable|string',
         ]);
 
         $productData = [
             'product_name' => $request->input('product_name'),
             'product_price' => $request->input('product_price'),
             'product_category_id' => $request->input('category_id'),
-            'product_description' => $request->input('description', null),
+            'product_description' => $request->input('product_description', null),
         ];
 
         $product = Product::find($id);
@@ -104,7 +104,6 @@ class ProductsController extends Controller
         // Logic to delete a product
         return response()->json(['status' => true, 'message' => 'Product Deleted Successfully']);
     }
-
 
     public function get_product($id){
         $product = Product::where('product_id',$id)->first();

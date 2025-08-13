@@ -17,9 +17,9 @@ class AuthenticationController extends Controller
         // Validate The Request Data
         $request->validate([
             'email' => 'required|email',
-            'password' => 'required|min:6',
+            'password' => 'required|min:3',
         ]);
-
+ 
         // check if the user exists
         $user = User::where('email', $request->email)->first();
         if (!$user || !password_verify($request->password, $user->password)) {

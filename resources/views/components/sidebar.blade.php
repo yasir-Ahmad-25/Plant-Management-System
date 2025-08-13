@@ -8,7 +8,7 @@
                 </svg> --}}
                 <img src="{{ asset('images/Logo.png')}}" alt="" class="w-5 h-5 text-white">
             </div>
-            <h1 class="text-xl font-bold text-gray-800">Geed Soor</h1>
+            <h1 class="text-xl font-bold text-gray-800">Planter</h1>
         </div>
     </div>
 

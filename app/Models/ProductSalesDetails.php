@@ -17,3 +17,4 @@ class ProductSalesDetails extends Model
         'price',
     ];
 }
+ 

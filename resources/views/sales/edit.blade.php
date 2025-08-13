@@ -13,9 +13,9 @@
                     <div>
                         <h1 class="text-3xl font-bold text-green-800 mb-2">
                             <i class="fas fa-seedling mr-3 text-green-600"></i>
-                            New Plant Sale
+                            {{ $page_title }}
                         </h1>
-                        <p class="text-green-600">Add a new sale transaction for plant products</p>
+                        <p class="text-green-600">Edit the sale transaction for plant products</p>
                     </div>
                     <div class="flex space-x-3">
                         <button onclick="window.history.back()" class="px-4 py-2 bg-amber-600 text-white rounded-md hover:bg-amber-700 transition-colors duration-200">
@@ -27,7 +27,6 @@
 
             <!-- Sales Form -->
             <form id="salesForm" class="space-y-6">
-                @csrf
                 <!-- Customer Information Section -->
                 <div class="bg-white rounded-md shadow-sm border border-green-200 p-6">
                     <h2 class="text-xl font-semibold text-green-800 mb-4 flex items-center">
@@ -38,26 +37,26 @@
                         <div>
                             <label for="customer_name" class="block text-sm font-medium text-green-700 mb-2">Customer Name</label>
                             <input type="text" id="customer_name" name="customer_name" required
-                                   class="w-full px-4 py-3 border border-green-300 rounded-md focus:outline-none focus:ring-2 focus:ring-green-500 focus:border-green-500 transition-colors duration-200"
-                                   placeholder="Enter customer name">
+                                class="w-full px-4 py-3 border border-green-300 rounded-md focus:outline-none focus:ring-2 focus:ring-green-500 focus:border-green-500 transition-colors duration-200"
+                                value="{{ $saleData->customer_name }}">
                         </div>
                         <div>
                             <label for="customer_number" class="block text-sm font-medium text-green-700 mb-2">Customer Number</label>
                             <input type="text" id="customer_number" name="customer_number" required
-                                   class="w-full px-4 py-3 border border-green-300 rounded-md focus:outline-none focus:ring-2 focus:ring-green-500 focus:border-green-500 transition-colors duration-200"
-                                   placeholder="Enter customer number">
+                                class="w-full px-4 py-3 border border-green-300 rounded-md focus:outline-none focus:ring-2 focus:ring-green-500 focus:border-green-500 transition-colors duration-200"
+                                value="{{ $saleData->customer_number }}">
                         </div>
                         <div>
                             <label for="customer_address" class="block text-sm font-medium text-green-700 mb-2">Customer Address</label>
                             <input type="text" id="customer_address" name="customer_address" required
-                                   class="w-full px-4 py-3 border border-green-300 rounded-md focus:outline-none focus:ring-2 focus:ring-green-500 focus:border-green-500 transition-colors duration-200"
-                                   placeholder="Enter customer address">
+                                class="w-full px-4 py-3 border border-green-300 rounded-md focus:outline-none focus:ring-2 focus:ring-green-500 focus:border-green-500 transition-colors duration-200"
+                                value="{{ $saleData->customer_address }}">
                         </div>
                         <div>
                             <label for="sales_date" class="block text-sm font-medium text-green-700 mb-2">Sale Date</label>
                             <input type="date" id="sales_date" name="sales_date" required
-                                   class="w-full px-4 py-3 border border-green-300 rounded-md focus:outline-none focus:ring-2 focus:ring-green-500 focus:border-green-500 transition-colors duration-200"
-                                   value="{{ date('Y-m-d') }}">
+                                class="w-full px-4 py-3 border border-green-300 rounded-md focus:outline-none focus:ring-2 focus:ring-green-500 focus:border-green-500 transition-colors duration-200"
+                                value="{{ $saleData->sales_date }}">
                         </div>
                     </div>
                 </div>
@@ -74,7 +73,7 @@
                             <i class="fas fa-plus mr-2"></i>Add Product
                         </button>
                     </div>
-                    
+
                     <div class="overflow-x-auto">
                         <table class="w-full border-collapse">
                             <thead>
@@ -87,29 +86,31 @@
                                 </tr>
                             </thead>
                             <tbody id="productTable">
+                                @foreach ($selected_products as $index => $selected_product)
                                 <tr class="border-b border-green-100 product-row">
                                     <td class="py-3 px-4">
-                                        <select name="products[0][product_id]" required class="w-full px-3 py-2 border border-green-300 rounded-md focus:outline-none focus:ring-2 focus:ring-green-500 focus:border-green-500" onchange="showProductPrice(this)">
+                                        <select name="products[{{ $index }}][product_id]" required class="w-full px-3 py-2 border border-green-300 rounded-md focus:outline-none focus:ring-2 focus:ring-green-500 focus:border-green-500" onchange="showProductPrice(this)">
                                             <option value="" disabled selected>Select Plant</option>
                                             @foreach ($products as $product)
-                                                <option value="{{ $product->product_id }}">{{ $product->product_name }}</option>
+                                                <option value="{{ $product->product_id }}" 
+                                                    @if($product->product_id == $selected_product->product_id) selected @endif>
+                                                    {{ $product->product_name }}
+                                                </option>
                                             @endforeach
                                         </select>
                                     </td>
                                     <td class="py-3 px-4">
-                                        <input type="number" name="products[0][quantity]" min="1" value="1" required
-                                               class="w-full px-3 py-2 border border-green-300 rounded-md focus:outline-none focus:ring-2 focus:ring-green-500 focus:border-green-500 quantity-input"
-                                               oninput="calculateRowTotal(this)">
+                                        <input type="number" name="products[{{ $index }}][quantity]" min="1" value="{{ $selected_product->quantity }}" required
+                                            class="w-full px-3 py-2 border border-green-300 rounded-md focus:outline-none focus:ring-2 focus:ring-green-500 focus:border-green-500 quantity-input"
+                                            oninput="calculateRowTotal(this)">
                                     </td>
                                     <td class="py-3 px-4">
-                                        <input type="number" name="products[0][price]" step="0.01" min="0" required readonly
-                                               class="w-full px-3 py-2 border border-green-300 rounded-md focus:outline-none focus:ring-2 focus:ring-green-500 focus:border-green-500 price-input"
-                                               placeholder="0.00">
+                                        <input type="number" name="products[{{ $index }}][price]" step="0.01" min="0" value="{{ $selected_product->price }}" required readonly
+                                            class="w-full px-3 py-2 border border-green-300 rounded-md focus:outline-none focus:ring-2 focus:ring-green-500 focus:border-green-500 price-input" placeholder="0.00">
                                     </td>
-                                    <!-- onchange="calculateRowTotal(this)"  -->
                                     <td class="py-3 px-4">
-                                        <input type="number" name="products[0][total]" step="0.01" readonly
-                                               class="w-full px-3 py-2 bg-green-50 border border-green-300 rounded-md total-input" placeholder="0.00">
+                                        <input type="number" name="products[{{ $index }}][total]" step="0.01" readonly
+                                            class="w-full px-3 py-2 bg-green-50 border border-green-300 rounded-md total-input" placeholder="0.00">
                                     </td>
                                     <td class="py-3 px-4">
                                         <button type="button" onclick="removeProduct(this)" 
@@ -118,10 +119,11 @@
                                         </button>
                                     </td>
                                 </tr>
+                                @endforeach
                             </tbody>
                         </table>
                     </div>
-                    
+
                     <div class="mt-4 text-right">
                         <span class="text-lg font-semibold text-green-800">
                             Subtotal: $<span id="subtotal">0.00</span>
@@ -138,33 +140,33 @@
                     <div class="grid grid-cols-1 md:grid-cols-4 gap-6">
                         <div>
                             <label for="discount" class="block text-sm font-medium text-green-700 mb-2">Discount ($)</label>
-                            <input type="number" id="discount" name="discount" step="0.01" min="0" value="0"
-                                   class="w-full px-4 py-3 border border-green-300 rounded-md focus:outline-none focus:ring-2 focus:ring-green-500 focus:border-green-500 transition-colors duration-200"
-                                   oninput="calculateGrandTotal()" placeholder="0.00">
+                            <input type="number" id="discount" name="discount" step="0.01" min="0" value="{{ $saleData->discount ?? 0 }}"
+                                class="w-full px-4 py-3 border border-green-300 rounded-md focus:outline-none focus:ring-2 focus:ring-green-500 focus:border-green-500 transition-colors duration-200"
+                                oninput="calculateGrandTotal()" placeholder="0.00">
                         </div>
                         <div>
                             <label for="delivery" class="block text-sm font-medium text-green-700 mb-2">Delivery ($)</label>
-                            <input type="number" id="delivery" name="delivery" step="0.01" min="0" value="0"
-                                   class="w-full px-4 py-3 border border-green-300 rounded-md focus:outline-none focus:ring-2 focus:ring-green-500 focus:border-green-500 transition-colors duration-200"
-                                   oninput="calculateGrandTotal()" placeholder="0.00">
+                            <input type="number" id="delivery" name="delivery" step="0.01" min="0" value="{{ $saleData->delivery ?? 0 }}"
+                                class="w-full px-4 py-3 border border-green-300 rounded-md focus:outline-none focus:ring-2 focus:ring-green-500 focus:border-green-500 transition-colors duration-200"
+                                oninput="calculateGrandTotal()" placeholder="0.00">
                         </div>
                         <div>
                             <label for="paid" class="block text-sm font-medium text-green-700 mb-2">Paid ($)</label>
-                            <input type="number" id="paid" name="paid" step="0.01" min="0" value="0"
-                                   class="w-full px-4 py-3 border border-green-300 rounded-md focus:outline-none focus:ring-2 focus:ring-green-500 focus:border-green-500 transition-colors duration-200"
-                                   onchange="calculateBalance()" placeholder="0.00">
+                            <input type="number" id="paid" name="paid" step="0.01" min="0" value="{{ $saleData->paid ?? 0 }}"
+                                class="w-full px-4 py-3 border border-green-300 rounded-md focus:outline-none focus:ring-2 focus:ring-green-500 focus:border-green-500 transition-colors duration-200"
+                                oninput="calculateBalance(); calculateGrandTotal()" placeholder="0.00">
                         </div>
                         <div>
                             <label for="balance" class="block text-sm font-medium text-green-700 mb-2">Balance ($)</label>
                             <input type="number" id="balance" name="balance" step="0.01" readonly
-                                   class="w-full px-4 py-3 bg-green-50 border border-green-300 rounded-md" placeholder="0.00">
+                                class="w-full px-4 py-3 bg-green-50 border border-green-300 rounded-md" placeholder="0.00">
                         </div>
                     </div>
-                    
+
                     <div class="mt-6 pt-4 border-t border-green-200">
                         <div class="text-right">
                             <span class="text-2xl font-bold text-green-800">
-                                Grand Total: $<span id="grandTotal">0.00</span>
+                                Grand Total: $<span id="grandTotal">{{ $saleData->grand_total ?? '0.00' }}</span>
                             </span>
                         </div>
                     </div>
@@ -193,6 +195,7 @@
         let productIndex = 1;
 
         function showProductPrice(selectElement) {
+            console.log("showing price 3");
             const product_id = selectElement.value;  // Get the selected product ID from the <select> element
             
             $.ajax({
@@ -209,6 +212,7 @@
                         row.querySelector('.price-input').value = price;  // Update the price input field in the same row
                         calculateRowTotal(selectElement);
                         calculateGrandTotal();
+                        console.log("showing price 2");
                     } else {
                         // Show error message
                         Swal.fire({
@@ -299,6 +303,8 @@
             calculateSubtotal();
             calculateGrandTotal();
             calculateBalance();
+            console.log("showing price");
+             
         }
 
         function calculateSubtotal() {
@@ -410,7 +416,10 @@
             $.ajax({
                 url: '{{ route("admin.sales.store") }}',
                 type: 'POST',
-                data: formData,
+                data: {
+                    formData: formData,
+                    _token: '{{ csrf_token() }}'
+                },
                 processData: false,
                 contentType: false,
                 success: function(response) {
@@ -455,6 +464,7 @@
                 e.preventDefault();
             }
         });
+
 
     </script>
 </x-base>

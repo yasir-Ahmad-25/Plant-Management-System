@@ -157,21 +157,21 @@
 
 
         <!-- Toast Notification System -->
-    <div id="toast" class="hidden fixed top-4 right-4 z-50 max-w-sm w-full">
-        <div class="bg-white border border-gray-200 rounded-lg shadow-lg p-4">
-            <div class="flex items-center">
-                <div id="toastIcon" class="flex-shrink-0 w-6 h-6 mr-3"></div>
-                <div class="flex-1">
-                    <p id="toastMessage" class="text-sm font-medium text-gray-900"></p>
+        <div id="toast" class="hidden fixed top-4 right-4 z-50 max-w-sm w-full">
+            <div class="bg-white border border-gray-200 rounded-lg shadow-lg p-4">
+                <div class="flex items-center">
+                    <div id="toastIcon" class="flex-shrink-0 w-6 h-6 mr-3"></div>
+                    <div class="flex-1">
+                        <p id="toastMessage" class="text-sm font-medium text-gray-900"></p>
+                    </div>
+                    <button onclick="hideToast()" class="ml-3 text-gray-400 hover:text-gray-600">
+                        <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path>
+                        </svg>
+                    </button>
                 </div>
-                <button onclick="hideToast()" class="ml-3 text-gray-400 hover:text-gray-600">
-                    <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path>
-                    </svg>
-                </button>
             </div>
         </div>
-    </div>
 
         <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.7.1/jquery.min.js"></script>
         <script src="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/js/all.min.js"></script>

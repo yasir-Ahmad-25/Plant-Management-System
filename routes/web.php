@@ -32,8 +32,11 @@ Route::middleware('custom.auth')->controller(DashboardController::class)->group(
     // ===================== Sales Section [START] =================
     Route::get('sales', [SalesController::class, 'index'])->name('admin.sales');
     Route::get('get_sale/{id}', [SalesController::class, 'get_sale'])->name('admin.get_sale');
+    Route::post('get_product_price', [SalesController::class, 'get_product_price'])->name('admin.sales.product_price');
     Route::get('create_sale_view', [SalesController::class, 'create_sale_view'])->name('admin.sales.create_sale_view');
     Route::post('store_sale', [SalesController::class, 'store_sale'])->name('admin.sales.store');
+
+    Route::get('edit_sale_view/{id}', [SalesController::class, 'edit_sale_view'])->name('admin.sales.edit_sale_view');
     Route::post('update_sale/{id}', [SalesController::class, 'update_sale'])->name('admin.sales.update');
     Route::post('delete_sale/{id}', [SalesController::class, 'delete_sale'])->name('admin.sales.delete');
     Route::post('search_sale', [SalesController::class, 'search_sale'])->name('admin.sales.search');

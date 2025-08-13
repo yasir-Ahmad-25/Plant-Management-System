@@ -18,7 +18,7 @@
                     @csrf
                     <div class="flex justify-center">
                         <img src="{{ asset('images/Logo.png')}}" alt="" class="w-14 h-14 rounded-md bg-stone-100">
-                        <h2 class="text-3xl font-bold text-gray-700 ml-2 mt-2">Geed Soor</h2>
+                        <h2 class="text-3xl font-bold text-gray-700 ml-2 mt-2">Planter</h2>
                     </div>
 
                     

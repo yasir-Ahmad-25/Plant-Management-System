@@ -56,64 +56,65 @@
                             </tr>
                         </thead>
                         <tbody class="divide-y divide-green-100">
-                            <!-- Sample Data Row 1 -->
-                            <tr class="hover:bg-green-50 transition-colors duration-200">
-                                <td class="py-4 px-6 text-sm font-medium text-gray-900">1</td>
-                                <td class="py-4 px-6">
-                                    <div class="flex items-center">
-                                        <i class="fas fa-receipt text-green-600 mr-2"></i>
-                                        <span class="text-sm font-medium text-gray-900">INV-2024-001</span>
-                                    </div>
-                                </td>
-                                <td class="py-4 px-6">
-                                    <div class="flex items-center">
-                                        <i class="fas fa-user text-green-600 mr-2"></i>
-                                        <span class="text-sm font-medium text-gray-900">John Smith</span>
-                                    </div>
-                                </td>
-                                <td class="py-4 px-6">
-                                    <div class="flex items-center">
-                                        <i class="fas fa-phone text-green-600 mr-2"></i>
-                                        <span class="text-sm text-gray-700">+1 234 567 8900</span>
-                                    </div>
-                                </td>
-                                <td class="py-4 px-6">
-                                    <div class="flex items-center">
-                                        <i class="fas fa-map-marker-alt text-green-600 mr-2"></i>
-                                        <span class="text-sm text-gray-700">123 Garden St, Plant City</span>
-                                    </div>
-                                </td>
-                                <td class="py-4 px-6 text-center">
-                                    <span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-green-100 text-green-800">
-                                        <i class="fas fa-seedling mr-1"></i>
-                                        3 Plants
-                                    </span>
-                                </td>
-                                <td class="py-4 px-6 text-right text-sm font-semibold text-gray-900">$245.50</td>
-                                <td class="py-4 px-6 text-right text-sm text-gray-700">$15.00</td>
-                                <td class="py-4 px-6 text-right text-sm text-gray-700">$10.00</td>
-                                <td class="py-4 px-6 text-right text-sm text-gray-700">$200.00</td>
-                                <td class="py-4 px-6 text-right">
-                                    <span class="text-sm font-medium text-amber-600">$50.50</span>
-                                </td>
-                                <td class="py-4 px-6">
-                                    <div class="flex items-center justify-center space-x-1">
-                                        <!-- Added print button to action buttons -->
-                                        <button onclick="printInvoice(1)" class="px-2 py-1.5 bg-green-500 text-white text-xs rounded-md hover:bg-green-600 transition-colors duration-200" title="Print Invoice">
-                                            <i class="fas fa-print"></i>
-                                        </button>
-                                        <button onclick="viewSale(1)" class="px-2 py-1.5 bg-blue-500 text-white text-xs rounded-md hover:bg-blue-600 transition-colors duration-200" title="View Sale">
-                                            <i class="fas fa-eye"></i>
-                                        </button>
-                                        <button onclick="editSale(1)" class="px-2 py-1.5 bg-amber-500 text-white text-xs rounded-md hover:bg-amber-600 transition-colors duration-200" title="Edit Sale">
-                                            <i class="fas fa-edit"></i>
-                                        </button>
-                                        <button onclick="deleteSale(1)" class="px-2 py-1.5 bg-red-500 text-white text-xs rounded-md hover:bg-red-600 transition-colors duration-200" title="Delete Sale">
-                                            <i class="fas fa-trash"></i>
-                                        </button>
-                                    </div>
-                                </td>
-                            </tr>
+                            @foreach ($sales as $sale)
+                                <tr class="hover:bg-green-50 transition-colors duration-200">
+                                    <td class="py-4 px-6 text-sm font-medium text-gray-900">1</td>
+                                    <td class="py-4 px-6">
+                                        <div class="flex items-center">
+                                            <i class="fas fa-receipt text-green-600 mr-2"></i>
+                                            <span class="text-sm font-medium text-gray-900">INV-2024-001</span>
+                                        </div>
+                                    </td>
+                                    <td class="py-4 px-6">
+                                        <div class="flex items-center">
+                                            <i class="fas fa-user text-green-600 mr-2"></i>
+                                            <span class="text-sm font-medium text-gray-900">John Smith</span>
+                                        </div>
+                                    </td>
+                                    <td class="py-4 px-6">
+                                        <div class="flex items-center">
+                                            <i class="fas fa-phone text-green-600 mr-2"></i>
+                                            <span class="text-sm text-gray-700">+1 234 567 8900</span>
+                                        </div>
+                                    </td>
+                                    <td class="py-4 px-6">
+                                        <div class="flex items-center">
+                                            <i class="fas fa-map-marker-alt text-green-600 mr-2"></i>
+                                            <span class="text-sm text-gray-700">123 Garden St, Plant City</span>
+                                        </div>
+                                    </td>
+                                    <td class="py-4 px-6 text-center">
+                                        <span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-green-100 text-green-800">
+                                            <i class="fas fa-seedling mr-1"></i>
+                                            3 Plants
+                                        </span>
+                                    </td>
+                                    <td class="py-4 px-6 text-right text-sm font-semibold text-gray-900">$245.50</td>
+                                    <td class="py-4 px-6 text-right text-sm text-gray-700">$15.00</td>
+                                    <td class="py-4 px-6 text-right text-sm text-gray-700">$10.00</td>
+                                    <td class="py-4 px-6 text-right text-sm text-gray-700">$200.00</td>
+                                    <td class="py-4 px-6 text-right">
+                                        <span class="text-sm font-medium text-amber-600">$50.50</span>
+                                    </td>
+                                    <td class="py-4 px-6">
+                                        <div class="flex items-center justify-center space-x-1">
+                                            <!-- Added print button to action buttons -->
+                                            <button onclick="printInvoice(1)" class="px-2 py-1.5 bg-green-500 text-white text-xs rounded-md hover:bg-green-600 transition-colors duration-200" title="Print Invoice">
+                                                <i class="fas fa-print"></i>
+                                            </button>
+                                            <button onclick="viewSale(1)" class="px-2 py-1.5 bg-blue-500 text-white text-xs rounded-md hover:bg-blue-600 transition-colors duration-200" title="View Sale">
+                                                <i class="fas fa-eye"></i>
+                                            </button>
+                                            <button onclick="editSale(1)" class="px-2 py-1.5 bg-amber-500 text-white text-xs rounded-md hover:bg-amber-600 transition-colors duration-200" title="Edit Sale">
+                                                <i class="fas fa-edit"></i>
+                                            </button>
+                                            <button onclick="deleteSale(1)" class="px-2 py-1.5 bg-red-500 text-white text-xs rounded-md hover:bg-red-600 transition-colors duration-200" title="Delete Sale">
+                                                <i class="fas fa-trash"></i>
+                                            </button>
+                                        </div>
+                                    </td>
+                                </tr>
+                            @endforeach
 
                             <!-- Sample Data Row 2 -->
                             <tr class="hover:bg-green-50 transition-colors duration-200">
@@ -164,7 +165,7 @@
                                         <button onclick="viewSale(2)" class="px-2 py-1.5 bg-blue-500 text-white text-xs rounded-md hover:bg-blue-600 transition-colors duration-200" title="View Sale">
                                             <i class="fas fa-eye"></i>
                                         </button>
-                                        <button onclick="editSale(2)" class="px-2 py-1.5 bg-amber-500 text-white text-xs rounded-md hover:bg-amber-600 transition-colors duration-200" title="Edit Sale">
+                                        <button onclick="editSale(1)" class="px-2 py-1.5 bg-amber-500 text-white text-xs rounded-md hover:bg-amber-600 transition-colors duration-200" title="Edit Sale">
                                             <i class="fas fa-edit"></i>
                                         </button>
                                         <button onclick="deleteSale(2)" class="px-2 py-1.5 bg-red-500 text-white text-xs rounded-md hover:bg-red-600 transition-colors duration-200" title="Delete Sale">
@@ -420,7 +421,7 @@
             doc.setTextColor(255, 255, 255);
             doc.setFontSize(28);
             doc.setFont('helvetica', 'bold');
-            doc.text('Geedsoor', 20, 20);
+            doc.text('Planter', 20, 20);
             
             doc.setFontSize(11);
             doc.setFont('helvetica', 'normal');
@@ -431,7 +432,7 @@
             doc.setFontSize(10);
             doc.text('Taleex-Hodan, Mogadishu Somalia', 20, 45);
             doc.text('Phone: +252 611141415', 20, 52);
-            doc.text('Email: info@geedsoor.com', 20, 59);
+            doc.text('Email: info@Planter.com', 20, 59);
 
             // Invoice title and details box
             doc.setFillColor(248, 250, 252);
@@ -539,8 +540,8 @@
             yPos += 30;
             doc.setTextColor(...lightGray);
             doc.setFontSize(8);
-            doc.text('Thank you for choosing Geedsoor - Growing green dreams together!', 25, yPos);
-            doc.text('For support: info@geedsoor.com | +252 611141415', 25, yPos + 7);
+            doc.text('Thank you for choosing Planter - Growing green dreams together!', 25, yPos);
+            doc.text('For support: info@Planter.com | +252 611141415', 25, yPos + 7);
 
             // Decorative plant icons (using text symbols)
             doc.setTextColor(...primaryGreen);
@@ -571,7 +572,8 @@
 
         function editSale(saleId) {
             // Redirect to edit page with pre-filled data
-            window.location.href = `/admin/sales/${saleId}/edit`;
+            // window.location.href = `/admin/sales/${saleId}/edit`;
+            window.location.href = `{{ route('admin.sales.edit_sale_view',':id') }}`.replace(':id',saleId);
         }
 
         function deleteSale(saleId) {
