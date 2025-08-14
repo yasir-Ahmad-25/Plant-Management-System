@@ -53,6 +53,8 @@ Route::middleware('custom.auth')->controller(DashboardController::class)->group(
     Route::get('settings', [DashboardController::class, 'settings'])->name('admin.settings');
     Route::post('update_settings', [DashboardController::class, 'update_settings'])->name('admin.settings.update');
     // ===================== Settings Section [END] =================
+
+    Route::get('sales-overview', [DashboardController::class, 'salesOverview'])->name('dashboard.salesOverview');
 });
 
 

@@ -56,9 +56,9 @@
                             </tr>
                         </thead>
                         <tbody class="divide-y divide-green-100">
-                            @foreach ($sales as $sale)
+                            @foreach ($sales as $index => $sale)
                                 <tr class="hover:bg-green-50 transition-colors duration-200">
-                                    <td class="py-4 px-6 text-sm font-medium text-gray-900">1</td>
+                                    <td class="py-4 px-6 text-sm font-medium text-gray-900">{{ $index + 1}}</td>
                                     <td class="py-4 px-6">
                                         <div class="flex items-center">
                                             <i class="fas fa-receipt text-green-600 mr-2"></i>

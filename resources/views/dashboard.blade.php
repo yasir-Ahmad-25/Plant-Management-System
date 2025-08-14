@@ -66,8 +66,7 @@
                     <p class="text-gray-600 mt-1">Welcome back! Here's what's happening with your business today.</p>
                 </div>
             </div>
-
-            <!-- Stats Cards -->
+            
             <!-- Stats Cards -->
             <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 mb-8">
 
@@ -137,9 +136,11 @@
                             </div>
                         </div>
                         <div class="w-12 h-12 bg-orange-100 rounded-lg flex items-center justify-center">
-                            <svg class="w-6 h-6 text-orange-600" fill="currentColor" viewBox="0 0 20 20">
-                                <path d="M2 11a1 1 0 011-1h2a1 1 0 011 1v5a1 1 0 01-1 1H3a1 1 0 01-1-1v-5zM8 7a1 1 0 011-1h2a1 1 0 011 1v9a1 1 0 01-1 1H9a1 1 0 01-1-1V7zM14 4a1 1 0 011-1h2a1 1 0 011 1v12a1 1 0 01-1 1h-2a1 1 0 01-1-1V4z"/>
+                            <svg class="w-6 h-6 text-orange-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                    d="M9 17v-2h6v2m-6-6h6m5-8H4a2 2 0 00-2 2v16l4-4h12l4 4V5a2 2 0 00-2-2z"/>
                             </svg>
+
                         </div>
                     </div>
                 </div>
@@ -153,43 +154,19 @@
                 <div class="bg-white rounded-xl shadow-sm border border-gray-200 p-6">
                     <div class="flex items-center justify-between mb-6">
                         <h3 class="text-lg font-semibold text-gray-900">Sales Overview</h3>
-                        <select class="text-sm border border-gray-300 rounded-lg px-3 py-1 focus:ring-2 focus:ring-blue-500 focus:border-transparent">
-                            <option>Last 7 days</option>
-                            <option>Last 30 days</option>
-                            <option>Last 90 days</option>
+
+                        <select id="salesRange"
+                                class="text-sm border border-gray-300 rounded-lg px-3 py-1 focus:ring-2 focus:ring-blue-500 focus:border-transparent">
+                            <option value="7" selected>Last 7 days</option>
+                            <option value="30">Last 30 days</option>
+                            <option value="90">Last 90 days</option>
                         </select>
                     </div>
-                    <div class="h-64 flex items-end justify-between space-x-2">
-                        <div class="flex flex-col items-center space-y-2">
-                            <div class="w-8 bg-blue-500 rounded-t" style="height: 120px;"></div>
-                            <span class="text-xs text-gray-500">Mon</span>
-                        </div>
-                        <div class="flex flex-col items-center space-y-2">
-                            <div class="w-8 bg-blue-500 rounded-t" style="height: 80px;"></div>
-                            <span class="text-xs text-gray-500">Tue</span>
-                        </div>
-                        <div class="flex flex-col items-center space-y-2">
-                            <div class="w-8 bg-blue-500 rounded-t" style="height: 160px;"></div>
-                            <span class="text-xs text-gray-500">Wed</span>
-                        </div>
-                        <div class="flex flex-col items-center space-y-2">
-                            <div class="w-8 bg-blue-500 rounded-t" style="height: 100px;"></div>
-                            <span class="text-xs text-gray-500">Thu</span>
-                        </div>
-                        <div class="flex flex-col items-center space-y-2">
-                            <div class="w-8 bg-blue-500 rounded-t" style="height: 140px;"></div>
-                            <span class="text-xs text-gray-500">Fri</span>
-                        </div>
-                        <div class="flex flex-col items-center space-y-2">
-                            <div class="w-8 bg-blue-500 rounded-t" style="height: 90px;"></div>
-                            <span class="text-xs text-gray-500">Sat</span>
-                        </div>
-                        <div class="flex flex-col items-center space-y-2">
-                            <div class="w-8 bg-blue-500 rounded-t" style="height: 110px;"></div>
-                            <span class="text-xs text-gray-500">Sun</span>
-                        </div>
-                    </div>
+
+                    <!-- Chart area -->
+                    <div id="salesChart" class="h-64 flex items-end justify-between space-x-2"></div>
                 </div>
+
 
                 <!-- Top Products -->
                 <div class="bg-white rounded-xl shadow-sm border border-gray-200 p-6">
@@ -243,91 +220,64 @@
             <div class="bg-white rounded-xl shadow-sm border border-gray-200">
                 <div class="px-6 py-4 border-b border-gray-200">
                     <div class="flex items-center justify-between">
-                        <h3 class="text-lg font-semibold text-gray-900">Recent Orders</h3>
-                        <a href="#" class="text-blue-600 hover:text-blue-700 text-sm font-medium">View all</a>
+                        <h3 class="text-lg font-semibold text-gray-900">Recent Sales</h3>
+                        <a href="{{ route('admin.sales')}}" class="text-blue-600 hover:text-blue-700 text-sm font-medium">View all</a>
                     </div>
                 </div>
                 <div class="overflow-x-auto">
                     <table class="w-full">
                         <thead class="bg-gray-50">
                             <tr>
-                                <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Order ID</th>
+                                <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Date</th>
+                                <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Invoice</th>
                                 <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Customer</th>
                                 <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Product</th>
                                 <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Amount</th>
-                                <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Status</th>
-                                <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Date</th>
-                                <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Actions</th>
                             </tr>
                         </thead>
                         <tbody class="bg-white divide-y divide-gray-200">
+                            @forelse($recentSales as $row)
                             <tr class="hover:bg-gray-50">
-                                <td class="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-900">#ORD-001</td>
+                                <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
+                                {{ \Carbon\Carbon::parse($row->sales_date)->format('M d, Y') }}
+                                </td>
+
+                                <td class="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-900">
+                                {{ $row->invoice_number }}
+                                </td>
+
                                 <td class="px-6 py-4 whitespace-nowrap">
-                                    <div class="flex items-center">
-                                        <img class="w-8 h-8 rounded-full mr-3" src="https://ui-avatars.com/api/?name=John+Doe&background=3b82f6&color=fff" alt="">
-                                        <div>
-                                            <div class="text-sm font-medium text-gray-900">John Doe</div>
-                                            <div class="text-sm text-gray-500">john@example.com</div>
-                                        </div>
+                                <div class="flex items-center">
+                                    @php
+                                    $avatarName = urlencode($row->customer_name ?? 'Customer');
+                                    @endphp
+                                    <img class="w-8 h-8 rounded-full mr-3"
+                                        src="https://ui-avatars.com/api/?name={{ $avatarName }}&background=3b82f6&color=fff"
+                                        alt="{{ $row->customer_name }}">
+                                    <div>
+                                    <div class="text-sm font-medium text-gray-900">{{ $row->customer_name }}</div>
+                                    <div class="text-sm text-gray-500">{{ $row->customer_number }}</div>
                                     </div>
+                                </div>
                                 </td>
-                                <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900">Wireless Headphones</td>
-                                <td class="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-900">$299.99</td>
-                                <td class="px-6 py-4 whitespace-nowrap">
-                                    <span class="inline-flex px-2 py-1 text-xs font-semibold rounded-full bg-green-100 text-green-800">Completed</span>
+
+                                <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900">
+                                {{ $row->products_count }} {{ Str::plural('product', $row->products_count) }}
                                 </td>
-                                <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">Jan 15, 2024</td>
-                                <td class="px-6 py-4 whitespace-nowrap text-sm font-medium">
-                                    <button class="text-blue-600 hover:text-blue-900 mr-3">View</button>
-                                    <button class="text-red-600 hover:text-red-900">Delete</button>
+
+                                <td class="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-900">
+                                ${{ number_format((float)$row->grand_total, 2) }}
                                 </td>
                             </tr>
-                            <tr class="hover:bg-gray-50">
-                                <td class="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-900">#ORD-002</td>
-                                <td class="px-6 py-4 whitespace-nowrap">
-                                    <div class="flex items-center">
-                                        <img class="w-8 h-8 rounded-full mr-3" src="https://ui-avatars.com/api/?name=Jane+Smith&background=10b981&color=fff" alt="">
-                                        <div>
-                                            <div class="text-sm font-medium text-gray-900">Jane Smith</div>
-                                            <div class="text-sm text-gray-500">jane@example.com</div>
-                                        </div>
-                                    </div>
-                                </td>
-                                <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900">Smart Watch</td>
-                                <td class="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-900">$399.99</td>
-                                <td class="px-6 py-4 whitespace-nowrap">
-                                    <span class="inline-flex px-2 py-1 text-xs font-semibold rounded-full bg-yellow-100 text-yellow-800">Pending</span>
-                                </td>
-                                <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">Jan 14, 2024</td>
-                                <td class="px-6 py-4 whitespace-nowrap text-sm font-medium">
-                                    <button class="text-blue-600 hover:text-blue-900 mr-3">View</button>
-                                    <button class="text-red-600 hover:text-red-900">Delete</button>
+                            @empty
+                            <tr>
+                                <td colspan="5" class="px-6 py-6 text-center text-sm text-gray-500">
+                                No recent sales.
                                 </td>
                             </tr>
-                            <tr class="hover:bg-gray-50">
-                                <td class="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-900">#ORD-003</td>
-                                <td class="px-6 py-4 whitespace-nowrap">
-                                    <div class="flex items-center">
-                                        <img class="w-8 h-8 rounded-full mr-3" src="https://ui-avatars.com/api/?name=Mike+Johnson&background=f59e0b&color=fff" alt="">
-                                        <div>
-                                            <div class="text-sm font-medium text-gray-900">Mike Johnson</div>
-                                            <div class="text-sm text-gray-500">mike@example.com</div>
-                                        </div>
-                                    </div>
-                                </td>
-                                <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900">Laptop Stand</td>
-                                <td class="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-900">$89.99</td>
-                                <td class="px-6 py-4 whitespace-nowrap">
-                                    <span class="inline-flex px-2 py-1 text-xs font-semibold rounded-full bg-red-100 text-red-800">Cancelled</span>
-                                </td>
-                                <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">Jan 13, 2024</td>
-                                <td class="px-6 py-4 whitespace-nowrap text-sm font-medium">
-                                    <button class="text-blue-600 hover:text-blue-900 mr-3">View</button>
-                                    <button class="text-red-600 hover:text-red-900">Delete</button>
-                                </td>
-                            </tr>
-                        </tbody>
+                            @endforelse
+                            </tbody>
+
                     </table>
                 </div>
             </div>
@@ -365,5 +315,49 @@
         @if(session('message'))
             window.onload = showToast;
         @endif
+
+        (function() {
+            const chartEl = document.getElementById('salesChart');
+            const rangeEl = document.getElementById('salesRange');
+            const chartHeight = 220; // px for columns
+
+            async function loadSales(days = 7) {
+                chartEl.innerHTML = ''; // clear
+                try {
+                    const res = await fetch(`{{ route('dashboard.salesOverview') }}?days=${days}`);
+                    const json = await res.json();
+
+                    const max = json.max > 0 ? json.max : 1; // avoid division by zero
+
+                    // Build bars
+                    json.data.forEach(point => {
+                        const h = Math.round((point.value / max) * chartHeight);
+
+                        const wrap = document.createElement('div');
+                        wrap.className = 'flex flex-col items-center space-y-2';
+
+                        const bar = document.createElement('div');
+                        bar.className = 'w-8 bg-blue-500 rounded-t';
+                        bar.style.height = `${h}px`;
+                        bar.title = `$${point.value.toFixed(2)} on ${point.label}`;
+
+                        const label = document.createElement('span');
+                        label.className = 'text-xs text-gray-500';
+                        label.textContent = point.label;
+
+                        wrap.appendChild(bar);
+                        wrap.appendChild(label);
+                        chartEl.appendChild(wrap);
+                    });
+                } catch (e) {
+                    chartEl.innerHTML = '<div class="text-gray-500">Failed to load sales data.</div>';
+                    console.error(e);
+                }
+            }
+
+            // Initial + on change
+            loadSales(parseInt(rangeEl.value, 10));
+            rangeEl.addEventListener('change', (e) => loadSales(parseInt(e.target.value, 10)));
+        })();
     </script>
 </x-base>

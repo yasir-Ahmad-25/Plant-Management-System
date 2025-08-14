@@ -3,12 +3,36 @@
 namespace App\Http\Controllers;
 
 use App\Models\Category;
+use App\Models\Product;
+use Carbon\Carbon;
+use DB;
 use Illuminate\Http\Request;
 
 class CategoriesController extends Controller
 {
     public function categories(){
-        $categories = Category::all()->sortByDesc('product_category_id');
+        $categories = DB::table('product_categories')
+                    ->leftJoin('products', 'products.product_category_id', '=', 'product_categories.product_category_id')
+                    ->select(
+                        'product_categories.product_category_id',
+                        'product_categories.category_name',
+                        'product_categories.category_description',
+                        'product_categories.created_at',
+                        DB::raw('COUNT(products.product_id) as products_count')
+                    )
+                    ->groupBy(
+                        'product_categories.product_category_id',
+                        'product_categories.category_name',
+                        'product_categories.category_description',
+                        'product_categories.created_at'
+                    )
+                    ->orderByDesc('product_categories.product_category_id')
+                    ->get()
+                    ->map(function ($item) {
+                        $item->created_at = $item->created_at ? Carbon::parse($item->created_at) : null;
+                        return $item;
+                    });
+
         $data = [
             'page_title' => 'Categories',
             'categories' => $categories,

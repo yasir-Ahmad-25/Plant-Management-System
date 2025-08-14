@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Models\CompanyInfo;
 use Carbon\Carbon;
+use Carbon\CarbonPeriod;
 use DB;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
@@ -108,6 +109,23 @@ class DashboardController extends Controller
         $total_orders = $currentOrders;
         $orders_change = $pct($currentOrders, $prevOrders);
         
+
+        # ========  Recent Sales ======= #
+        $recentSales = DB::table('product_sales as ps')
+                    ->leftJoin('product_sales_details as d', 'd.sale_id', '=', 'ps.sale_id')
+                    ->select(
+                        'ps.sale_id',
+                        'ps.invoice_number',
+                        'ps.customer_name',
+                        'ps.customer_number',
+                        'ps.sales_date',
+                        'ps.grand_total',
+                        DB::raw('COUNT(d.detail_id) as products_count')
+                    )
+                    ->groupBy('ps.sale_id','ps.invoice_number','ps.customer_name','ps.customer_number','ps.sales_date','ps.grand_total')
+                    ->orderByDesc('ps.sales_date')
+                    ->limit(10)                    // show last 10 orders
+                    ->get();
         $data = [
             'page_title' => 'Dashboard',
             'user_name' => $name,
@@ -123,6 +141,7 @@ class DashboardController extends Controller
             'orders_change'   => $orders_change,    // e.g., -2.1 or null
 
             'topProducts'     => $topProducts,
+            'recentSales' => $recentSales,
         ];
 
         return view('dashboard',$data);
@@ -137,6 +156,7 @@ class DashboardController extends Controller
         return redirect()->route('auth.login');
     }
 
+    # ====== SETTINGS SECTION ====== #
     public function settings()
     {
         // Fetch company info
@@ -227,4 +247,52 @@ class DashboardController extends Controller
             ]);
         });
     }
+    #======= SETTINGS SECTION ====== #
+
+
+    public function salesOverview(Request $request)
+{
+    // Accept ?days=7|30|90 — default 7
+    $days = (int) $request->query('days', 7);
+    if (!in_array($days, [7, 30, 90])) { $days = 7; }
+
+    // Window: last N days INCLUDING today
+    $to   = Carbon::now()->endOfDay();
+    $from = Carbon::now()->subDays($days - 1)->startOfDay();
+
+    // Aggregate revenue per calendar day
+    $rows = DB::table('product_sales')
+        ->selectRaw('DATE(sales_date) as d, SUM(grand_total) as revenue')
+        ->whereBetween('sales_date', [$from, $to])
+        ->groupBy('d')
+        ->orderBy('d')
+        ->get()
+        ->keyBy('d');
+
+    // Build a dense series (fill missing days with 0)
+    $period = CarbonPeriod::create($from, '1 day', $to);
+    $data = [];
+    $max  = 0;
+
+    foreach ($period as $date) {
+        $key = $date->toDateString(); // YYYY-MM-DD
+        $value = (float) ($rows[$key]->revenue ?? 0);
+        $max = max($max, $value);
+
+        // label: Mon, Tue…  (or use $date->format('d M') for 30/90-day views)
+        $label = $days === 7 ? $date->format('D') : $date->format('d M');
+
+        $data[] = [
+            'date'  => $key,
+            'label' => $label,
+            'value' => round($value, 2),
+        ];
+    }
+
+    return response()->json([
+        'period' => ['from' => $from->toDateString(), 'to' => $to->toDateString(), 'days' => $days],
+        'max'    => $max,
+        'data'   => $data,
+    ]);
+}
 }
