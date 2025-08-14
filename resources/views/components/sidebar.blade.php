@@ -1,4 +1,8 @@
-
+@php
+    $company_info = \App\Models\CompanyInfo::first();
+    $user_email = Auth::user()->email ?? '';
+    $user_name = Auth::user()->name ?? '';
+@endphp
 
 <aside class="fixed left-0 top-0 z-40 w-64 h-screen transition-transform -translate-x-full sm:translate-x-0 bg-white border-r border-gray-200 shadow-lg">
     <!-- Sidebar Header -->
@@ -8,9 +12,9 @@
                 {{-- <svg class="" fill="currentColor" viewBox="0 0 20 20">
                     <path d="M3 4a1 1 0 011-1h12a1 1 0 011 1v2a1 1 0 01-1 1H4a1 1 0 01-1-1V4zM3 10a1 1 0 011-1h6a1 1 0 011 1v6a1 1 0 01-1 1H4a1 1 0 01-1-1v-6zM14 9a1 1 0 00-1 1v6a1 1 0 001 1h2a1 1 0 001-1v-6a1 1 0 00-1-1h-2z"/>
                 </svg> --}}
-                <img src="{{ asset('images/Logo.png')}}" alt="" class="w-5 h-5 text-white">
+                <img src="{{ $company_info && $company_info->company_logo ? asset('storage/' . $company_info->company_logo) : asset('images/default-logo.png') }}" alt="" class="w-5 h-5 text-white">
             </div>
-            <h1 class="text-xl font-bold text-gray-800">Planter</h1>
+            <h1 class="text-xl font-bold text-gray-800 text-pretty">{{ $company_info->company_name}}</h1>
         </div>
     </div>
 
@@ -86,8 +90,8 @@
         <div class="flex items-center space-x-3">
             <img class="w-10 h-10 rounded-full" src="https://ui-avatars.com/api/?name=Admin&background=3b82f6&color=fff" alt="Admin">
             <div class="flex-1 min-w-0">
-                <p class="text-sm font-medium text-gray-900 truncate">Admin</p>
-                <p class="text-xs text-gray-500 truncate">{{Auth::user()->email;}}</p>
+                <p class="text-sm font-medium text-gray-900 truncate">{{ $user_name }}</p>
+                <p class="text-xs text-gray-500 truncate">{{$user_email}}</p>
             </div>
         </div>
         <form method="POST" action="{{ route('admin.logout')}}" class="mt-3">

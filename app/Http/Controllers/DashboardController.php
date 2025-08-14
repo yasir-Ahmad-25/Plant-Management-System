@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Models\CompanyInfo;
+use Carbon\Carbon;
 use DB;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
@@ -19,11 +20,111 @@ class DashboardController extends Controller
         $name = Auth::user()->name;
         $email = $user->email;
 
+        # ===== TOP PRODUCTS ===== #
+        // Date windows: last 30 days vs the 30 days before that
+        $to   = Carbon::now();
+        $from = $to->copy()->subDays(30);
+        $prevFrom = $from->copy()->subDays(30);
+        $prevTo   = $from;
+
+        // Current period revenue per product
+        $current = DB::table('product_sales_details as psd')
+            ->join('product_sales as ps', 'ps.sale_id', '=', 'psd.sale_id')
+            ->join('products as p', 'p.product_id', '=', 'psd.product_id')
+            ->leftJoin('product_categories as c', 'c.product_category_id', '=', 'p.product_category_id')
+            ->whereBetween('ps.sales_date', [$from, $to])
+            ->groupBy('psd.product_id', 'p.product_name', 'c.category_name')
+            ->select(
+                'psd.product_id',
+                'p.product_name',
+                DB::raw('COALESCE(c.category_name, "Uncategorized") as category_name'),
+                DB::raw('SUM(psd.total) as revenue')
+            )
+            ->orderByDesc('revenue')
+            ->limit(3)
+            ->get()
+            ->keyBy('product_id');
+
+        // Previous period revenue (for growth%)
+        $previous = DB::table('product_sales_details as psd')
+            ->join('product_sales as ps', 'ps.sale_id', '=', 'psd.sale_id')
+            ->whereBetween('ps.sales_date', [$prevFrom, $prevTo])
+            ->groupBy('psd.product_id')
+            ->select('psd.product_id', DB::raw('SUM(psd.total) as revenue'))
+            ->pluck('revenue', 'product_id');
+
+        // Merge growth%
+        $topProducts = $current->values()->map(function ($row) use ($previous) {
+            $prev = (float) ($previous[$row->product_id] ?? 0);
+            $curr = (float) $row->revenue;
+            $growth = $prev > 0 ? (($curr - $prev) / $prev) * 100 : null; // null if no baseline
+            return (object)[
+                'product_name'  => $row->product_name,
+                'category_name' => $row->category_name,
+                'revenue'       => $curr,
+                'growth'        => $growth, // may be null
+            ];
+        });
+
+        # ========== Stats Cards ============ #
+        // helper for % change (null if no baseline)
+        $pct = fn ($curr, $prev) => $prev > 0 ? round((($curr - $prev) / $prev) * 100, 1) : null;
+
+        /* 1) TOTAL REVENUE */
+        $currentRevenue = (float) DB::table('product_sales')
+            ->whereBetween('sales_date', [$from, $to])
+            ->sum('grand_total');
+
+        $prevRevenue = (float) DB::table('product_sales')
+            ->whereBetween('sales_date', [$prevFrom, $prevTo])
+            ->sum('grand_total');
+
+        $total_revenue = $currentRevenue;                 // for card display
+        $revenue_change = $pct($currentRevenue, $prevRevenue);  // for “vs last period”
+
+        /* 2) TOTAL CUSTOMERS (unique) — replaces “Active Customers” */
+        $currentCustomers = (int) DB::table('product_sales')
+            ->whereBetween('sales_date', [$from, $to])
+            ->distinct('customer_number')                 // or 'customer_name' if numbers aren’t reliable
+            ->count('customer_number');
+
+        $prevCustomers = (int) DB::table('product_sales')
+            ->whereBetween('sales_date', [$prevFrom, $prevTo])
+            ->distinct('customer_number')
+            ->count('customer_number');
+
+        $total_customers = $currentCustomers;
+        $customers_change = $pct($currentCustomers, $prevCustomers);
+
+        /* 3) TOTAL ORDERS — replaces “Conversion Rate” */
+        $currentOrders = (int) DB::table('product_sales')
+            ->whereBetween('sales_date', [$from, $to])
+            ->count();
+
+        $prevOrders = (int) DB::table('product_sales')
+            ->whereBetween('sales_date', [$prevFrom, $prevTo])
+            ->count();
+
+        $total_orders = $currentOrders;
+        $orders_change = $pct($currentOrders, $prevOrders);
+        
         $data = [
             'page_title' => 'Dashboard',
             'user_name' => $name,
             'user_email' => $email,
+
+            'total_revenue'   => $total_revenue,
+            'revenue_change'  => $revenue_change,   // e.g., +15.3 or null
+
+            'total_customers' => $total_customers,
+            'customers_change'=> $customers_change, // e.g., +8.0 or null
+
+            'total_orders'    => $total_orders,
+            'orders_change'   => $orders_change,    // e.g., -2.1 or null
+
+            'topProducts'     => $topProducts,
         ];
+
         return view('dashboard',$data);
     }
 

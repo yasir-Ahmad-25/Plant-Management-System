@@ -68,19 +68,26 @@
             </div>
 
             <!-- Stats Cards -->
-            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-8">
+            <!-- Stats Cards -->
+            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 mb-8">
+
                 <!-- Total Revenue -->
                 <div class="bg-white rounded-xl shadow-sm border border-gray-200 p-6 hover:shadow-md transition-shadow duration-200">
                     <div class="flex items-center justify-between">
                         <div>
                             <p class="text-sm font-medium text-gray-600">Total Revenue</p>
-                            <p class="text-3xl font-bold text-gray-900 mt-2">$45,231</p>
+                            <p class="text-3xl font-bold text-gray-900 mt-2">
+                                ${{ number_format($total_revenue ?? 0, 2) }}
+                            </p>
                             <div class="flex items-center mt-2">
-                                <span class="text-green-500 text-sm font-medium">+12.5%</span>
+                                @php $chg = $revenue_change; @endphp
+                                <span class="text-sm font-medium {{ is_null($chg) ? 'text-gray-500' : ($chg >= 0 ? 'text-green-600' : 'text-red-600') }}">
+                                    {{ is_null($chg) ? '—' : (($chg >= 0 ? '+' : '') . $chg . '%') }}
+                                </span>
                                 <span class="text-gray-500 text-sm ml-2">vs last month</span>
                             </div>
                         </div>
-                        <div class="w-12 h-12 bg-green-100 rounded-lg flex items-center justify-center">
+                        <div class="w-12 h-12 bg-green-100 rounded-lg flex items-center justify-center mt-4">
                             <svg class="w-6 h-6 text-green-600" fill="currentColor" viewBox="0 0 20 20">
                                 <path d="M8.433 7.418c.155-.103.346-.196.567-.267v1.698a2.305 2.305 0 01-.567-.267C8.07 8.34 8 8.114 8 8c0-.114.07-.34.433-.582zM11 12.849v-1.698c.22.071.412.164.567.267.364.243.433.468.433.582 0 .114-.07.34-.433.582a2.305 2.305 0 01-.567.267z"/>
                                 <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm1-13a1 1 0 10-2 0v.092a4.535 4.535 0 00-1.676.662C6.602 6.234 6 7.009 6 8c0 .99.602 1.765 1.324 2.246.48.32 1.054.545 1.676.662v1.941c-.391-.127-.68-.317-.843-.504a1 1 0 10-1.51 1.31c.562.649 1.413 1.076 2.353 1.253V15a1 1 0 102 0v-.092a4.535 4.535 0 001.676-.662C13.398 13.766 14 12.991 14 12c0-.99-.602-1.765-1.324-2.246A4.535 4.535 0 0011 9.092V7.151c.391.127.68.317.843.504a1 1 0 101.511-1.31c-.563-.649-1.413-1.076-2.354-1.253V5z" clip-rule="evenodd"/>
@@ -89,33 +96,19 @@
                     </div>
                 </div>
 
-                <!-- Total Orders -->
+                <!-- Total Customers -->
                 <div class="bg-white rounded-xl shadow-sm border border-gray-200 p-6 hover:shadow-md transition-shadow duration-200">
                     <div class="flex items-center justify-between">
                         <div>
-                            <p class="text-sm font-medium text-gray-600">Total Orders</p>
-                            <p class="text-3xl font-bold text-gray-900 mt-2">1,429</p>
+                            <p class="text-sm font-medium text-gray-600">Total Customers</p>
+                            <p class="text-3xl font-bold text-gray-900 mt-2">
+                                {{ number_format($total_customers ?? 0) }}
+                            </p>
                             <div class="flex items-center mt-2">
-                                <span class="text-blue-500 text-sm font-medium">+8.2%</span>
-                                <span class="text-gray-500 text-sm ml-2">vs last month</span>
-                            </div>
-                        </div>
-                        <div class="w-12 h-12 bg-blue-100 rounded-lg flex items-center justify-center">
-                            <svg class="w-6 h-6 text-blue-600" fill="currentColor" viewBox="0 0 20 20">
-                                <path d="M3 1a1 1 0 000 2h1.22l.305 1.222a.997.997 0 00.01.042l1.358 5.43-.893.892C3.74 11.846 4.632 14 6.414 14H15a1 1 0 000-2H6.414l1-1H14a1 1 0 00.894-.553l3-6A1 1 0 0017 3H6.28l-.31-1.243A1 1 0 005 1H3zM16 16.5a1.5 1.5 0 11-3 0 1.5 1.5 0 013 0zM6.5 18a1.5 1.5 0 100-3 1.5 1.5 0 000 3z"/>
-                            </svg>
-                        </div>
-                    </div>
-                </div>
-
-                <!-- Active Customers -->
-                <div class="bg-white rounded-xl shadow-sm border border-gray-200 p-6 hover:shadow-md transition-shadow duration-200">
-                    <div class="flex items-center justify-between">
-                        <div>
-                            <p class="text-sm font-medium text-gray-600">Active Customers</p>
-                            <p class="text-3xl font-bold text-gray-900 mt-2">892</p>
-                            <div class="flex items-center mt-2">
-                                <span class="text-purple-500 text-sm font-medium">+15.3%</span>
+                                @php $chg = $customers_change; @endphp
+                                <span class="text-sm font-medium {{ is_null($chg) ? 'text-gray-500' : ($chg >= 0 ? 'text-green-600' : 'text-red-600') }}">
+                                    {{ is_null($chg) ? '—' : (($chg >= 0 ? '+' : '') . $chg . '%') }}
+                                </span>
                                 <span class="text-gray-500 text-sm ml-2">vs last month</span>
                             </div>
                         </div>
@@ -127,14 +120,19 @@
                     </div>
                 </div>
 
-                <!-- Conversion Rate -->
+                <!-- Total Orders -->
                 <div class="bg-white rounded-xl shadow-sm border border-gray-200 p-6 hover:shadow-md transition-shadow duration-200">
                     <div class="flex items-center justify-between">
                         <div>
-                            <p class="text-sm font-medium text-gray-600">Conversion Rate</p>
-                            <p class="text-3xl font-bold text-gray-900 mt-2">3.24%</p>
+                            <p class="text-sm font-medium text-gray-600">Total Orders</p>
+                            <p class="text-3xl font-bold text-gray-900 mt-2">
+                                {{ number_format($total_orders ?? 0) }}
+                            </p>
                             <div class="flex items-center mt-2">
-                                <span class="text-red-500 text-sm font-medium">-2.1%</span>
+                                @php $chg = $orders_change; @endphp
+                                <span class="text-sm font-medium {{ is_null($chg) ? 'text-gray-500' : ($chg >= 0 ? 'text-green-600' : 'text-red-600') }}">
+                                    {{ is_null($chg) ? '—' : (($chg >= 0 ? '+' : '') . $chg . '%') }}
+                                </span>
                                 <span class="text-gray-500 text-sm ml-2">vs last month</span>
                             </div>
                         </div>
@@ -145,7 +143,9 @@
                         </div>
                     </div>
                 </div>
+
             </div>
+
 
             <!-- Charts and Tables Row -->
             <div class="grid grid-cols-1 lg:grid-cols-2 gap-6 mb-8">
@@ -194,54 +194,49 @@
                 <!-- Top Products -->
                 <div class="bg-white rounded-xl shadow-sm border border-gray-200 p-6">
                     <h3 class="text-lg font-semibold text-gray-900 mb-6">Top Products</h3>
+
+                    @php
+                        $badgeBg = ['bg-blue-100','bg-green-100','bg-yellow-100'];
+                        $badgeTx = ['text-blue-600','text-green-600','text-yellow-600'];
+                    @endphp
+
                     <div class="space-y-4">
+                        @forelse($topProducts as $i => $p)
+                        @php
+                            $rank = $i + 1;
+                            $bg = $badgeBg[$i] ?? 'bg-gray-100';
+                            $tx = $badgeTx[$i] ?? 'text-gray-600';
+                            $growthVal = is_null($p->growth) ? null : round($p->growth);
+                            $growthClass = is_null($growthVal) ? 'text-gray-500'
+                                        : ($growthVal >= 0 ? 'text-green-600' : 'text-red-600');
+                            $growthPrefix = is_null($growthVal) ? '' : ($growthVal >= 0 ? '+' : '');
+                        @endphp
+
                         <div class="flex items-center justify-between p-3 bg-gray-50 rounded-lg">
                             <div class="flex items-center space-x-3">
-                                <div class="w-10 h-10 bg-blue-100 rounded-lg flex items-center justify-center">
-                                    <span class="text-blue-600 font-semibold">1</span>
-                                </div>
-                                <div>
-                                    <p class="font-medium text-gray-900">Wireless Headphones</p>
-                                    <p class="text-sm text-gray-500">Electronics</p>
-                                </div>
+                            <div class="w-10 h-10 {{ $bg }} rounded-lg flex items-center justify-center">
+                                <span class="{{ $tx }} font-semibold">{{ $rank }}</span>
+                            </div>
+                            <div>
+                                <p class="font-medium text-gray-900">{{ $p->product_name }}</p>
+                                <p class="text-sm text-gray-500">{{ $p->category_name }}</p>
+                            </div>
                             </div>
                             <div class="text-right">
-                                <p class="font-semibold text-gray-900">$2,459</p>
-                                <p class="text-sm text-green-600">+12%</p>
+                            <p class="font-semibold text-gray-900">${{ number_format($p->revenue, 0) }}</p>
+                            <p class="text-sm {{ $growthClass }}">
+                                {{ is_null($growthVal) ? '—' : $growthPrefix . $growthVal . '%' }}
+                            </p>
                             </div>
                         </div>
-                        <div class="flex items-center justify-between p-3 bg-gray-50 rounded-lg">
-                            <div class="flex items-center space-x-3">
-                                <div class="w-10 h-10 bg-green-100 rounded-lg flex items-center justify-center">
-                                    <span class="text-green-600 font-semibold">2</span>
-                                </div>
-                                <div>
-                                    <p class="font-medium text-gray-900">Smart Watch</p>
-                                    <p class="text-sm text-gray-500">Wearables</p>
-                                </div>
-                            </div>
-                            <div class="text-right">
-                                <p class="font-semibold text-gray-900">$1,899</p>
-                                <p class="text-sm text-green-600">+8%</p>
-                            </div>
+                        @empty
+                        <div class="p-4 bg-gray-50 rounded-lg text-gray-500">
+                            No sales data yet.
                         </div>
-                        <div class="flex items-center justify-between p-3 bg-gray-50 rounded-lg">
-                            <div class="flex items-center space-x-3">
-                                <div class="w-10 h-10 bg-yellow-100 rounded-lg flex items-center justify-center">
-                                    <span class="text-yellow-600 font-semibold">3</span>
-                                </div>
-                                <div>
-                                    <p class="font-medium text-gray-900">Laptop Stand</p>
-                                    <p class="text-sm text-gray-500">Accessories</p>
-                                </div>
-                            </div>
-                            <div class="text-right">
-                                <p class="font-semibold text-gray-900">$1,234</p>
-                                <p class="text-sm text-red-600">-3%</p>
-                            </div>
-                        </div>
+                        @endforelse
                     </div>
                 </div>
+                
             </div>
 
             <!-- Recent Orders Table -->
