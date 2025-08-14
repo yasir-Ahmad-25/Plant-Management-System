@@ -48,6 +48,11 @@ Route::middleware('custom.auth')->controller(DashboardController::class)->group(
     Route::get('sales_report_pdf', [SalesController::class, 'sales_report_pdf'])->name('admin.sales.report.pdf');
     Route::get('sales_report_excel', [SalesController::class, 'sales_report_excel'])->name('admin.sales.report.excel');
     // ===================== Sales Section [END] =================
+
+    // ===================== Settings Section [START] =================
+    Route::get('settings', [DashboardController::class, 'settings'])->name('admin.settings');
+    Route::post('update_settings', [DashboardController::class, 'update_settings'])->name('admin.settings.update');
+    // ===================== Settings Section [END] =================
 });
 
 

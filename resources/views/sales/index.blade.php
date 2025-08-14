@@ -123,7 +123,7 @@
                 <div class="px-6 py-4 bg-green-50 border-t border-green-200">
                     <div class="flex items-center justify-between">
                         <div class="text-sm text-green-700">
-                            Showing <span class="font-medium">4</span> sales records
+                            Showing <span class="font-medium">{{ number_format($sales->count())}}</span> sales records
                         </div>
                         <div class="flex items-center space-x-6 text-sm">
                             <div class="text-green-700">
